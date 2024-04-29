@@ -2261,9 +2261,9 @@ char * uint_to_buffer(char* bufEnd, UIntType value) {
 }
 
 #ifdef G3D_System_h
-template<typename CharType, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>, typename IntType>
+template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>, typename IntType>
 #else
-template<typename CharType, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>, typename IntType>
+template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>, typename IntType>
 #endif
 SIMDString<CharType, INTERNAL_SIZE, Allocator>  int_to_string(IntType value) {
     const int n = std::numeric_limits<IntType>::digits10 + 3;
@@ -2282,32 +2282,32 @@ SIMDString<CharType, INTERNAL_SIZE, Allocator>  int_to_string(IntType value) {
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(int value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long long value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned int value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned long value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
 SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned long long value) {
-    return int_to_string(value);
+    return int_to_string<CharType, INTERNAL_SIZE, Allocator>(value);
 }
 
 TEMPLATE 
