@@ -563,7 +563,7 @@ public:
     }
 
     constexpr SIMDString(const_pointer s) : m_length(std::char_traits<CharType>::length(s)) {
-        if (inConstSegment(s)) {
+        if (inConstSegment((const char*)s)) {
             m_ptr = const_cast<pointer>(s);
             m_allocatedSize = 0;
         } else {
