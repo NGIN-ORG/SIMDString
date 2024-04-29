@@ -2336,10 +2336,10 @@ SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long double value) {
 }
 
     
-template <typename CharType, size_t _Size, class _Alloc1>
-struct std::hash<SIMDString<_Size, _Alloc1>>
+template <typename _CharType, size_t _Size, class _Alloc1>
+struct std::hash<SIMDString<_CharType ,_Size, _Alloc1>>
 { 
-    size_t operator()(const SIMDString<_Size, _Alloc1>& str) const noexcept
+    size_t operator()(const SIMDString<_CharType, _Size, _Alloc1>& str) const noexcept
     { 
         // a recommended way of hashing bytes that is compiler neutral 
         // and does not require implementing our own hash function
