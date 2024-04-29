@@ -1950,7 +1950,7 @@ __attribute__((__aligned__(SSO_ALIGNMENT)))
 ;
 
 TEMPLATE
-std::ostream& operator<<(std::ostream& os, const SIMDString<INTERNAL_SIZE, Allocator>& str) {
+std::ostream& operator<<(std::ostream& os, const SIMDString<CharType,INTERNAL_SIZE, Allocator>& str) {
     std::ostream::sentry sen(os);
     if (sen) {
         try {
@@ -1960,7 +1960,7 @@ std::ostream& operator<<(std::ostream& os, const SIMDString<INTERNAL_SIZE, Alloc
                 const bool left = ((os.flags() & std::ostream::adjustfield) == std::ostream::left);
 
                 if (!left) {    
-                    const typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = os.fill();
+                    const typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type c = os.fill();
                     for (std::streamsize fillN = w - str.size(); fillN > 0; --fillN)
                     {
                         if (os.rdbuf()->sputc(c) == EOF) {
@@ -1975,7 +1975,7 @@ std::ostream& operator<<(std::ostream& os, const SIMDString<INTERNAL_SIZE, Alloc
                 }
                 
                 if (left && os.good()){
-                    const typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = os.fill();
+                    const typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type c = os.fill();
                     for (std::streamsize fillN = w - str.size(); fillN > 0; --fillN)
                     {
                         if (os.rdbuf()->sputc(c) == EOF) {
@@ -1998,8 +1998,8 @@ std::ostream& operator<<(std::ostream& os, const SIMDString<INTERNAL_SIZE, Alloc
 }
 
 TEMPLATE
-std::istream& operator>>(std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>& str) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
+std::istream& operator>>(std::istream& is, SIMDString<CharType, INTERNAL_SIZE, Allocator>& str) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
     std::istream::ios_base::iostate err = std::istream::ios_base::goodbit;
     std::istream::sentry sen(is);
 
@@ -2007,10 +2007,10 @@ std::istream& operator>>(std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>&
         try
         {
             str.erase();
-            const typename SIMDString<INTERNAL_SIZE, Allocator>::size_type n =
-                is.width() > 0 ? static_cast<typename SIMDString<INTERNAL_SIZE, Allocator>::size_type>(is.width())
+            const typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type n =
+                is.width() > 0 ? static_cast<typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type>(is.width())
                     : str.max_size();
-            typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = is.rdbuf()->sgetc();
+            typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type c = is.rdbuf()->sgetc();
 
             while (numExtracted < n && c != EOF && !std::isspace(c, is.getloc())) {
                 str += c;
@@ -2041,8 +2041,8 @@ std::istream& operator>>(std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>&
 
 TEMPLATE
 std::istream& getline(
-    std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>& str, typename SIMDString<INTERNAL_SIZE, Allocator>::value_type delim = '\n') {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
+    std::istream& is, SIMDString<CharType, INTERNAL_SIZE, Allocator>& str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type delim = '\n') {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
     std::istream::ios_base::iostate  err = std::istream::ios_base::goodbit;
     std::istream::sentry sen(is, true);
 
@@ -2050,8 +2050,8 @@ std::istream& getline(
         try
         {
             str.erase();
-            const typename SIMDString<INTERNAL_SIZE, Allocator>::size_type n = str.max_size();
-            typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = is.rdbuf()->sgetc();
+            const typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type n = str.max_size();
+            typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type c = is.rdbuf()->sgetc();
 
             while (numExtracted < n && c != EOF && c != delim) {
                 str += c;
@@ -2087,8 +2087,8 @@ std::istream& getline(
 
 TEMPLATE 
 inline int stoi(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     int answer = ::strtol(str.data(), &end, base);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2107,8 +2107,8 @@ inline int stoi(
 
 TEMPLATE 
 inline long stol(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     long answer = ::strtol(str.data(), &end, base);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2127,8 +2127,8 @@ inline long stol(
 
 TEMPLATE 
 inline long long stoll(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     long long answer = ::strtoll(str.data(), &end, base);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2147,8 +2147,8 @@ inline long long stoll(
 
 TEMPLATE 
 inline unsigned long stoul(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     unsigned long answer = ::strtoul(str.data(), &end, base);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2167,8 +2167,8 @@ inline unsigned long stoul(
 
 TEMPLATE 
 inline unsigned long long stoull(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     unsigned long long answer = ::strtoull(str.data(), &end, base);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2187,8 +2187,8 @@ inline unsigned long long stoull(
 
 TEMPLATE 
 inline float stof(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     float answer = ::strtof(str.data(), &end);
     
     if ( end == str.data() ) {
@@ -2208,8 +2208,8 @@ inline float stof(
 
 TEMPLATE 
 inline double stod(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     double answer = ::strtod(str.data(), &end);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2228,8 +2228,8 @@ inline double stod(
 
 TEMPLATE 
 inline long double stold(
-    const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
-    typename SIMDString<INTERNAL_SIZE, Allocator>::pointer end;
+    const SIMDString<CharType, INTERNAL_SIZE, Allocator> &str, typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::size_type* pos = nullptr) {
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::pointer end;
     long double answer = ::strtold(str.data(), &end);
     if ( end == str.data() ) {
         throw std::invalid_argument("invalid stof argument");
@@ -2265,74 +2265,74 @@ template<size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>, 
 #else
 template<size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>, typename IntType>
 #endif
-SIMDString<INTERNAL_SIZE, Allocator>  int_to_string(IntType value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator>  int_to_string(IntType value) {
     const int n = std::numeric_limits<IntType>::digits10 + 3;
     char str[n + 1] = {'\0'};
 
     if (std::is_unsigned_v<IntType> || value >= 0) {
-        return SIMDString<INTERNAL_SIZE, Allocator>(uint_to_buffer(str + n, value));
+        return SIMDString<CharType, INTERNAL_SIZE, Allocator>(uint_to_buffer(str + n, value));
     } else {
         using UIntType = std::make_unsigned_t<IntType>;
         char* start  = uint_to_buffer(str + n, static_cast<UIntType>(0 - value));
         *(--start) = '-';
 
-        return SIMDString<INTERNAL_SIZE, Allocator>(start);
+        return SIMDString<CharType, INTERNAL_SIZE, Allocator>(start);
     }
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(int value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(int value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(long value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(long long value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long long value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned int value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned int value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned long value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned long value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned long long value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(unsigned long long value) {
     return int_to_string(value);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(float value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(float value) {
     // max digits for exponent in base 10 + max digits for mantissa in base 10 + extra buffer for extraneous symbols [+-01.e+-]
     const int n = std::numeric_limits<float>::max_exponent10 + std::numeric_limits<float>::max_digits10 + 10;
-    typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[n];
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type str[n];
     snprintf(str, n, "%f", value);
-    return SIMDString<INTERNAL_SIZE, Allocator>(str);
+    return SIMDString<CharType, INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(double value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(double value) {
     const int n = std::numeric_limits<double>::max_exponent10 + std::numeric_limits<double>::max_digits10 + 10;
-    typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[n];
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type str[n];
     snprintf(str, n, "%f", value); 
-    return SIMDString<INTERNAL_SIZE, Allocator>(str);
+    return SIMDString<CharType, INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE 
-SIMDString<INTERNAL_SIZE, Allocator> to_string(long double value) {
+SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long double value) {
     const int n = std::numeric_limits<long double>::max_exponent10 + std::numeric_limits<long double>::max_digits10 + 10;
-    typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[n];
+    typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::value_type str[n];
     snprintf(str, n, "%Lf", value);
-    return SIMDString<INTERNAL_SIZE, Allocator>(str);
+    return SIMDString<CharType, INTERNAL_SIZE, Allocator>(str);
 }
 
     
@@ -2349,12 +2349,12 @@ struct std::hash<SIMDString<_Size, _Alloc1>>
 };
 
 TEMPLATE 
-typename SIMDString<INTERNAL_SIZE, Allocator>::iterator begin(SIMDString<INTERNAL_SIZE, Allocator>& str) {
+typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::iterator begin(SIMDString<CharType, INTERNAL_SIZE, Allocator>& str) {
     return str.begin();
 }
 
 TEMPLATE
-typename SIMDString<INTERNAL_SIZE, Allocator>::iterator end(SIMDString<INTERNAL_SIZE, Allocator>& str) {
+typename SIMDString<CharType, INTERNAL_SIZE, Allocator>::iterator end(SIMDString<CharType, INTERNAL_SIZE, Allocator>& str) {
     return str.end();
 }
 
