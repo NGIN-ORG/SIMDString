@@ -55,9 +55,9 @@ SOFTWARE.
 #endif
 
 #ifdef G3D_System_h
-#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<CharType>>
+#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>>
 #else
-#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<CharType>>
+#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>>
 #endif
 
 bool inConstSegment(const char* c);
