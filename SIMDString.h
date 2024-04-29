@@ -2336,7 +2336,7 @@ SIMDString<CharType, INTERNAL_SIZE, Allocator> to_string(long double value) {
 }
 
     
-template <size_t _Size, class _Alloc1>
+template <typename CharType, size_t _Size, class _Alloc1>
 struct std::hash<SIMDString<_Size, _Alloc1>>
 { 
     size_t operator()(const SIMDString<_Size, _Alloc1>& str) const noexcept
