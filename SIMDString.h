@@ -55,9 +55,9 @@ SOFTWARE.
 #endif
 
 #ifdef G3D_System_h
-#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>>
+#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<CharType>>
 #else
-#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>>
+#define TEMPLATE template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<CharType>>
 #endif
 
 bool inConstSegment(const char* c);
@@ -562,7 +562,7 @@ public:
         }
     }
 
-    constexpr SIMDString(const_pointer s) : m_length(::strlen(s)) {
+    constexpr SIMDString(const_pointer s) : m_length(std::char_traits<CharType>::length(s)) {
         if (inConstSegment(s)) {
             m_ptr = const_cast<pointer>(s);
             m_allocatedSize = 0;
@@ -2261,9 +2261,9 @@ char * uint_to_buffer(char* bufEnd, UIntType value) {
 }
 
 #ifdef G3D_System_h
-template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<char>, typename IntType>
+template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = G3D::g3d_allocator<CharType>, typename IntType>
 #else
-template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<char>, typename IntType>
+template<typename CharType = char, size_t INTERNAL_SIZE = 64, class Allocator = ::std::allocator<CharType>, typename IntType>
 #endif
 SIMDString<CharType, INTERNAL_SIZE, Allocator>  int_to_string(IntType value) {
     const int n = std::numeric_limits<IntType>::digits10 + 3;
